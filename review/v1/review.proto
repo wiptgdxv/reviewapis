@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package api.review.v1;
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+option go_package = "review-service/api/review/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.review.v1";
+service Review {
+	// 创建评论
+	rpc CreateReview (CreateReviewRequest) returns (CreateReviewReply){	
+	option (google.api.http) = {
+	  post: "/v1/review"
+	  body: "*"
+	   };
+    }
+	//C端获取评价详情
+	rpc GetReview (GetReviewRequest) returns (GetReviewReply){
+	 option (google.api.http) = {
+	  get: "/v1/review/{reviewID}"
+	   };
+	 }
+	//O端审核评价
+	rpc AuditReview (AuditReviewRequest) returns (AuditReviewReply){
+	 option (google.api.http) = {
+	  post: "/v1/review/audit"
+	  body: "*"
+	   };
+	}
+	//B端回复评价
+	rpc ReplyReview (ReplyReviewRequest) returns (ReplyReviewReply){
+	 option (google.api.http) = {
+	  post: "/v1/review/reply",
+	  body: "*"
+	   };
+	}
+	//B端申诉评价
+	rpc AppealReview (AppealReviewRequest) returns (AppealReviewReply){
+	 option (google.api.http) = {
+	  post: "/v1/review/appeal",
+	  body: "*"
+	   };
+	}
+	//O端评价申诉审核
+	rpc AuditAppeal (AuditAppealRequest) returns (AuditAppealReply){
+	 option (google.api.http) = {
+	  post: "/v1/review/appeal/audit",
+	  body: "*"
+	   };
+	}
+	//C端查看userID的所有评价
+	rpc ListReviewsByUserID (ListReviewsByUserIDRequest) returns (ListReviewsByUserIDReply){
+	 option (google.api.http) = {
+	  get: "/v1/reviews/user/{userID}"
+	   };
+	}
+}
+message CreateReviewRequest {
+	int64 userID = 1 [(validate.rules).int64 ={gt:0}];// 用户ID
+	int64 orderID = 2 [(validate.rules).int64 ={gt:0}]; // 订单ID
+	int32 score = 3 [(validate.rules).int32 ={gt:0,lte:5}]; // 评分
+	int32 serviceScore = 4 [(validate.rules).int32 ={gte:0,lte:5}]; // 服务评分
+	int32 expressScore = 5 [(validate.rules).int32 ={gte:0,lte:5}]; // 快递评分
+	string content = 6 [(validate.rules).string ={min_len:8,max_len:500}]; // 评论内容
+	string picInfo = 7; // 评论图片信息，逗号分隔
+	string videoInfo = 8; // 评论视频信息，逗号分隔
+	bool anonymous = 9; // 是否匿名评论
+}
+message CreateReviewReply {
+	int64 reviewID = 1; // 评论ID
+}
+
+message GetReviewRequest {
+	int64 reviewID = 1 [(validate.rules).int64 ={gt:0}]; // 评论ID
+}
+message GetReviewReply {
+   ReviewInfo data = 1; // 评论详情
+}
+message ReviewInfo {
+	int64 reviewID = 1; // 评论ID
+	int64 userID = 2; // 用户ID
+	int64 orderID = 3; // 订单ID
+	int32 score = 4; // 评分
+	int32 serviceScore = 5; // 服务评分
+	int32 expressScore = 6; // 快递评分
+	string content = 7; // 评论内容
+	string picInfo = 8; // 评论图片信息，逗号分隔
+	string videoInfo = 9; // 评论视频信息，逗号分隔
+	int32 status = 10; // 评论状态
+}
+message AuditReviewRequest {
+	int64 reviewID = 1 [(validate.rules).int64 ={gt:0}]; // 评论ID
+	int32 status = 2 [(validate.rules).int32 ={gt:0}]; // 评论状态
+	string opUser = 3[(validate.rules).string ={min_len:2}]; // 操作人
+	string opReason = 4 [(validate.rules).string ={min_len:2}]; // 操作原因
+	optional string opRemarks = 5; // 备注
+}
+message AuditReviewReply {
+	int64 reviewID = 1; // 评论ID
+	int32 status = 2; // 评论状态
+}
+message ReplyReviewRequest {
+	int64 reviewID = 1 [(validate.rules).int64 ={gt:0}]; // 评论ID
+	int64 storeID = 2 [(validate.rules).int64 ={gt:0}]; // 店铺ID
+	string content = 3 [(validate.rules).string ={min_len:2,max_len:500}]; // 回复内容
+	string picInfo = 4; // 回复图片信息，逗号分隔
+	string videoInfo = 5; // 回复视频信息，逗号分隔
+}
+message ReplyReviewReply {
+	int64 replyID = 1; // 回复ID
+}
+message AppealReviewRequest {
+	int64 reviewID = 1 [(validate.rules).int64 ={gt:0}]; // 评论ID
+	int64 storeID = 2 [(validate.rules).int64 ={gt:0}]; // 店铺ID
+	string reason = 3 [(validate.rules).string ={min_len:2,max_len:500}]; // 申诉理由
+	string content = 4 [(validate.rules).string ={min_len:2,max_len:500}]; // 申诉内容
+	string picInfo = 5; // 申诉图片信息，逗号分隔
+	string videoInfo = 6; // 申诉视频信息，逗号分隔
+}
+message AppealReviewReply {
+	int64 appealID = 1; // 申诉ID
+}
+message AuditAppealRequest {
+	int64 reviewID = 1 [(validate.rules).int64 ={gt:0}]; // 评论ID
+	int32 status = 2 [(validate.rules).int32 ={gt:0}]; // 申诉状态
+	string opUser = 3[(validate.rules).string ={min_len:2}]; // 操作人
+	optional string opRemarks = 4; // 操作备注
+}
+message AuditAppealReply {
+}
+message ListReviewsByUserIDRequest {
+	int64 userID = 1 [(validate.rules).int64 ={gt:0}]; // 用户ID
+	int32 page = 2 [(validate.rules).int32 ={gt:0}]; // 页码
+	int32 pageSize = 3 [(validate.rules).int32 ={gt:0}]; // 每页条数
+}
+message ListReviewsByUserIDReply {
+	repeated ReviewInfo list = 1; // 评论列表
+}
