@@ -1443,6 +1443,17 @@ func (m *AuditAppealRequest) validate(all bool) error {
 
 	var errors []error
 
+	if m.GetAppealID() <= 0 {
+		err := AuditAppealRequestValidationError{
+			field:  "AppealID",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if m.GetReviewID() <= 0 {
 		err := AuditAppealRequestValidationError{
 			field:  "ReviewID",
@@ -1660,31 +1671,31 @@ var _ interface {
 	ErrorName() string
 } = AuditAppealReplyValidationError{}
 
-// Validate checks the field values on ListReviewsByUserIDRequest with the
+// Validate checks the field values on ListReviewsByStoreIDRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListReviewsByUserIDRequest) Validate() error {
+func (m *ListReviewsByStoreIDRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListReviewsByUserIDRequest with the
+// ValidateAll checks the field values on ListReviewsByStoreIDRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListReviewsByUserIDRequestMultiError, or nil if none found.
-func (m *ListReviewsByUserIDRequest) ValidateAll() error {
+// ListReviewsByStoreIDRequestMultiError, or nil if none found.
+func (m *ListReviewsByStoreIDRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListReviewsByUserIDRequest) validate(all bool) error {
+func (m *ListReviewsByStoreIDRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if m.GetUserID() <= 0 {
-		err := ListReviewsByUserIDRequestValidationError{
-			field:  "UserID",
+	if m.GetStoreID() <= 0 {
+		err := ListReviewsByStoreIDRequestValidationError{
+			field:  "StoreID",
 			reason: "value must be greater than 0",
 		}
 		if !all {
@@ -1694,7 +1705,7 @@ func (m *ListReviewsByUserIDRequest) validate(all bool) error {
 	}
 
 	if m.GetPage() <= 0 {
-		err := ListReviewsByUserIDRequestValidationError{
+		err := ListReviewsByStoreIDRequestValidationError{
 			field:  "Page",
 			reason: "value must be greater than 0",
 		}
@@ -1705,7 +1716,7 @@ func (m *ListReviewsByUserIDRequest) validate(all bool) error {
 	}
 
 	if m.GetPageSize() <= 0 {
-		err := ListReviewsByUserIDRequestValidationError{
+		err := ListReviewsByStoreIDRequestValidationError{
 			field:  "PageSize",
 			reason: "value must be greater than 0",
 		}
@@ -1716,19 +1727,19 @@ func (m *ListReviewsByUserIDRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListReviewsByUserIDRequestMultiError(errors)
+		return ListReviewsByStoreIDRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListReviewsByUserIDRequestMultiError is an error wrapping multiple
-// validation errors returned by ListReviewsByUserIDRequest.ValidateAll() if
+// ListReviewsByStoreIDRequestMultiError is an error wrapping multiple
+// validation errors returned by ListReviewsByStoreIDRequest.ValidateAll() if
 // the designated constraints aren't met.
-type ListReviewsByUserIDRequestMultiError []error
+type ListReviewsByStoreIDRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListReviewsByUserIDRequestMultiError) Error() string {
+func (m ListReviewsByStoreIDRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1737,11 +1748,12 @@ func (m ListReviewsByUserIDRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListReviewsByUserIDRequestMultiError) AllErrors() []error { return m }
+func (m ListReviewsByStoreIDRequestMultiError) AllErrors() []error { return m }
 
-// ListReviewsByUserIDRequestValidationError is the validation error returned
-// by ListReviewsByUserIDRequest.Validate if the designated constraints aren't met.
-type ListReviewsByUserIDRequestValidationError struct {
+// ListReviewsByStoreIDRequestValidationError is the validation error returned
+// by ListReviewsByStoreIDRequest.Validate if the designated constraints
+// aren't met.
+type ListReviewsByStoreIDRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1749,24 +1761,24 @@ type ListReviewsByUserIDRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListReviewsByUserIDRequestValidationError) Field() string { return e.field }
+func (e ListReviewsByStoreIDRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListReviewsByUserIDRequestValidationError) Reason() string { return e.reason }
+func (e ListReviewsByStoreIDRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListReviewsByUserIDRequestValidationError) Cause() error { return e.cause }
+func (e ListReviewsByStoreIDRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListReviewsByUserIDRequestValidationError) Key() bool { return e.key }
+func (e ListReviewsByStoreIDRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListReviewsByUserIDRequestValidationError) ErrorName() string {
-	return "ListReviewsByUserIDRequestValidationError"
+func (e ListReviewsByStoreIDRequestValidationError) ErrorName() string {
+	return "ListReviewsByStoreIDRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListReviewsByUserIDRequestValidationError) Error() string {
+func (e ListReviewsByStoreIDRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1778,14 +1790,14 @@ func (e ListReviewsByUserIDRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListReviewsByUserIDRequest.%s: %s%s",
+		"invalid %sListReviewsByStoreIDRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListReviewsByUserIDRequestValidationError{}
+var _ error = ListReviewsByStoreIDRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1793,24 +1805,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListReviewsByUserIDRequestValidationError{}
+} = ListReviewsByStoreIDRequestValidationError{}
 
-// Validate checks the field values on ListReviewsByUserIDReply with the rules
+// Validate checks the field values on ListReviewsByStoreIDReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListReviewsByUserIDReply) Validate() error {
+func (m *ListReviewsByStoreIDReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListReviewsByUserIDReply with the
+// ValidateAll checks the field values on ListReviewsByStoreIDReply with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListReviewsByUserIDReplyMultiError, or nil if none found.
-func (m *ListReviewsByUserIDReply) ValidateAll() error {
+// ListReviewsByStoreIDReplyMultiError, or nil if none found.
+func (m *ListReviewsByStoreIDReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListReviewsByUserIDReply) validate(all bool) error {
+func (m *ListReviewsByStoreIDReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1824,7 +1836,7 @@ func (m *ListReviewsByUserIDReply) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListReviewsByUserIDReplyValidationError{
+					errors = append(errors, ListReviewsByStoreIDReplyValidationError{
 						field:  fmt.Sprintf("List[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -1832,7 +1844,7 @@ func (m *ListReviewsByUserIDReply) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ListReviewsByUserIDReplyValidationError{
+					errors = append(errors, ListReviewsByStoreIDReplyValidationError{
 						field:  fmt.Sprintf("List[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -1841,7 +1853,7 @@ func (m *ListReviewsByUserIDReply) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ListReviewsByUserIDReplyValidationError{
+				return ListReviewsByStoreIDReplyValidationError{
 					field:  fmt.Sprintf("List[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -1852,19 +1864,19 @@ func (m *ListReviewsByUserIDReply) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListReviewsByUserIDReplyMultiError(errors)
+		return ListReviewsByStoreIDReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListReviewsByUserIDReplyMultiError is an error wrapping multiple validation
-// errors returned by ListReviewsByUserIDReply.ValidateAll() if the designated
-// constraints aren't met.
-type ListReviewsByUserIDReplyMultiError []error
+// ListReviewsByStoreIDReplyMultiError is an error wrapping multiple validation
+// errors returned by ListReviewsByStoreIDReply.ValidateAll() if the
+// designated constraints aren't met.
+type ListReviewsByStoreIDReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListReviewsByUserIDReplyMultiError) Error() string {
+func (m ListReviewsByStoreIDReplyMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1873,11 +1885,11 @@ func (m ListReviewsByUserIDReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListReviewsByUserIDReplyMultiError) AllErrors() []error { return m }
+func (m ListReviewsByStoreIDReplyMultiError) AllErrors() []error { return m }
 
-// ListReviewsByUserIDReplyValidationError is the validation error returned by
-// ListReviewsByUserIDReply.Validate if the designated constraints aren't met.
-type ListReviewsByUserIDReplyValidationError struct {
+// ListReviewsByStoreIDReplyValidationError is the validation error returned by
+// ListReviewsByStoreIDReply.Validate if the designated constraints aren't met.
+type ListReviewsByStoreIDReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1885,24 +1897,24 @@ type ListReviewsByUserIDReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListReviewsByUserIDReplyValidationError) Field() string { return e.field }
+func (e ListReviewsByStoreIDReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListReviewsByUserIDReplyValidationError) Reason() string { return e.reason }
+func (e ListReviewsByStoreIDReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListReviewsByUserIDReplyValidationError) Cause() error { return e.cause }
+func (e ListReviewsByStoreIDReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListReviewsByUserIDReplyValidationError) Key() bool { return e.key }
+func (e ListReviewsByStoreIDReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListReviewsByUserIDReplyValidationError) ErrorName() string {
-	return "ListReviewsByUserIDReplyValidationError"
+func (e ListReviewsByStoreIDReplyValidationError) ErrorName() string {
+	return "ListReviewsByStoreIDReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListReviewsByUserIDReplyValidationError) Error() string {
+func (e ListReviewsByStoreIDReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1914,14 +1926,14 @@ func (e ListReviewsByUserIDReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListReviewsByUserIDReply.%s: %s%s",
+		"invalid %sListReviewsByStoreIDReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListReviewsByUserIDReplyValidationError{}
+var _ error = ListReviewsByStoreIDReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -1929,4 +1941,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListReviewsByUserIDReplyValidationError{}
+} = ListReviewsByStoreIDReplyValidationError{}

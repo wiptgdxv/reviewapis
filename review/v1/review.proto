@@ -49,9 +49,9 @@ service Review {
 	   };
 	}
 	//C端查看userID的所有评价
-	rpc ListReviewsByUserID (ListReviewsByUserIDRequest) returns (ListReviewsByUserIDReply){
+	rpc ListReviewsByUserID (ListReviewsByStoreIDRequest) returns (ListReviewsByStoreIDReply){
 	 option (google.api.http) = {
-	  get: "/v1/reviews/user/{userID}"
+	  get: "/v1/reviews/store/{storeID}"
 	   };
 	}
 }
@@ -121,18 +121,19 @@ message AppealReviewReply {
 	int64 appealID = 1; // 申诉ID
 }
 message AuditAppealRequest {
-	int64 reviewID = 1 [(validate.rules).int64 ={gt:0}]; // 评论ID
-	int32 status = 2 [(validate.rules).int32 ={gt:0}]; // 申诉状态
-	string opUser = 3[(validate.rules).string ={min_len:2}]; // 操作人
-	optional string opRemarks = 4; // 操作备注
+	  int64 appealID = 1 [(validate.rules).int64 = {gt: 0}];//申诉ID
+	int64 reviewID = 2 [(validate.rules).int64 ={gt:0}]; // 评论ID
+	int32 status = 3 [(validate.rules).int32 ={gt:0}]; // 申诉状态
+	string opUser = 4[(validate.rules).string ={min_len:2}]; // 操作人
+	optional string opRemarks = 5; // 操作备注
 }
 message AuditAppealReply {
 }
-message ListReviewsByUserIDRequest {
-	int64 userID = 1 [(validate.rules).int64 ={gt:0}]; // 用户ID
+message ListReviewsByStoreIDRequest {
+	int64 storeID = 1 [(validate.rules).int64 ={gt:0}]; // 用户ID
 	int32 page = 2 [(validate.rules).int32 ={gt:0}]; // 页码
 	int32 pageSize = 3 [(validate.rules).int32 ={gt:0}]; // 每页条数
 }
-message ListReviewsByUserIDReply {
+message ListReviewsByStoreIDReply {
 	repeated ReviewInfo list = 1; // 评论列表
 }
