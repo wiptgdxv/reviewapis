@@ -24,6 +24,7 @@ const OperationReviewAuditAppeal = "/api.review.v1.Review/AuditAppeal"
 const OperationReviewAuditReview = "/api.review.v1.Review/AuditReview"
 const OperationReviewCreateReview = "/api.review.v1.Review/CreateReview"
 const OperationReviewGetReview = "/api.review.v1.Review/GetReview"
+const OperationReviewListReviewByUserID = "/api.review.v1.Review/ListReviewByUserID"
 const OperationReviewListReviewsByUserID = "/api.review.v1.Review/ListReviewsByUserID"
 const OperationReviewReplyReview = "/api.review.v1.Review/ReplyReview"
 
@@ -38,6 +39,7 @@ type ReviewHTTPServer interface {
 	CreateReview(context.Context, *CreateReviewRequest) (*CreateReviewReply, error)
 	// GetReviewC端获取评价详情
 	GetReview(context.Context, *GetReviewRequest) (*GetReviewReply, error)
+	ListReviewByUserID(context.Context, *ListReviewByUserIDRequest) (*ListReviewByUserIDReply, error)
 	// ListReviewsByUserIDC端查看userID的所有评价
 	ListReviewsByUserID(context.Context, *ListReviewsByStoreIDRequest) (*ListReviewsByStoreIDReply, error)
 	// ReplyReviewB端回复评价
@@ -53,6 +55,7 @@ func RegisterReviewHTTPServer(s *http.Server, srv ReviewHTTPServer) {
 	r.POST("/v1/review/appeal", _Review_AppealReview0_HTTP_Handler(srv))
 	r.POST("/v1/review/appeal/audit", _Review_AuditAppeal0_HTTP_Handler(srv))
 	r.GET("/v1/reviews/store/{storeID}", _Review_ListReviewsByUserID0_HTTP_Handler(srv))
+	r.GET("/v1/{userID}/reviews", _Review_ListReviewByUserID0_HTTP_Handler(srv))
 }
 
 func _Review_CreateReview0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Context) error {
@@ -209,6 +212,28 @@ func _Review_ListReviewsByUserID0_HTTP_Handler(srv ReviewHTTPServer) func(ctx ht
 	}
 }
 
+func _Review_ListReviewByUserID0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListReviewByUserIDRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationReviewListReviewByUserID)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListReviewByUserID(ctx, req.(*ListReviewByUserIDRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListReviewByUserIDReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type ReviewHTTPClient interface {
 	// AppealReviewB端申诉评价
 	AppealReview(ctx context.Context, req *AppealReviewRequest, opts ...http.CallOption) (rsp *AppealReviewReply, err error)
@@ -220,6 +245,7 @@ type ReviewHTTPClient interface {
 	CreateReview(ctx context.Context, req *CreateReviewRequest, opts ...http.CallOption) (rsp *CreateReviewReply, err error)
 	// GetReviewC端获取评价详情
 	GetReview(ctx context.Context, req *GetReviewRequest, opts ...http.CallOption) (rsp *GetReviewReply, err error)
+	ListReviewByUserID(ctx context.Context, req *ListReviewByUserIDRequest, opts ...http.CallOption) (rsp *ListReviewByUserIDReply, err error)
 	// ListReviewsByUserIDC端查看userID的所有评价
 	ListReviewsByUserID(ctx context.Context, req *ListReviewsByStoreIDRequest, opts ...http.CallOption) (rsp *ListReviewsByStoreIDReply, err error)
 	// ReplyReviewB端回复评价
@@ -296,6 +322,19 @@ func (c *ReviewHTTPClientImpl) GetReview(ctx context.Context, in *GetReviewReque
 	pattern := "/v1/review/{reviewID}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationReviewGetReview))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ReviewHTTPClientImpl) ListReviewByUserID(ctx context.Context, in *ListReviewByUserIDRequest, opts ...http.CallOption) (*ListReviewByUserIDReply, error) {
+	var out ListReviewByUserIDReply
+	pattern := "/v1/{userID}/reviews"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationReviewListReviewByUserID))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

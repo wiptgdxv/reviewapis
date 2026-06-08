@@ -54,6 +54,25 @@ service Review {
 	  get: "/v1/reviews/store/{storeID}"
 	   };
 	}
+	rpc ListReviewByUserID (ListReviewByUserIDRequest) returns (ListReviewByUserIDReply){
+	 option (google.api.http) = {
+	  get: "/v1/{userID}/reviews"
+	   };
+	}
+}
+// 用户评价列表的请求
+message ListReviewByUserIDRequest{
+	int64 userID = 1 [(validate.rules).int64 = {gt: 0}];
+	int32 page = 2 [(validate.rules).int32 = {gt: 0}];
+	int32 size = 3 [(validate.rules).int32 = {gt: 0}];
+}
+
+// 用户评价列表的返回值
+message ListReviewByUserIDReply{
+	repeated ReviewInfo list = 1;
+}
+message ListReviewByStoreIDReply {
+	ReviewInfo data = 1; // 评论详情
 }
 message CreateReviewRequest {
 	int64 userID = 1 [(validate.rules).int64 ={gt:0}];// 用户ID
