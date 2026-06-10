@@ -25,7 +25,7 @@ const OperationReviewAuditReview = "/api.review.v1.Review/AuditReview"
 const OperationReviewCreateReview = "/api.review.v1.Review/CreateReview"
 const OperationReviewGetReview = "/api.review.v1.Review/GetReview"
 const OperationReviewListReviewByUserID = "/api.review.v1.Review/ListReviewByUserID"
-const OperationReviewListReviewsByUserID = "/api.review.v1.Review/ListReviewsByUserID"
+const OperationReviewListReviewsByStoreID = "/api.review.v1.Review/ListReviewsByStoreID"
 const OperationReviewReplyReview = "/api.review.v1.Review/ReplyReview"
 
 type ReviewHTTPServer interface {
@@ -40,8 +40,8 @@ type ReviewHTTPServer interface {
 	// GetReviewC端获取评价详情
 	GetReview(context.Context, *GetReviewRequest) (*GetReviewReply, error)
 	ListReviewByUserID(context.Context, *ListReviewByUserIDRequest) (*ListReviewByUserIDReply, error)
-	// ListReviewsByUserIDC端查看userID的所有评价
-	ListReviewsByUserID(context.Context, *ListReviewsByStoreIDRequest) (*ListReviewsByStoreIDReply, error)
+	// ListReviewsByStoreIDC端查看userID的所有评价
+	ListReviewsByStoreID(context.Context, *ListReviewsByStoreIDRequest) (*ListReviewsByStoreIDReply, error)
 	// ReplyReviewB端回复评价
 	ReplyReview(context.Context, *ReplyReviewRequest) (*ReplyReviewReply, error)
 }
@@ -54,7 +54,7 @@ func RegisterReviewHTTPServer(s *http.Server, srv ReviewHTTPServer) {
 	r.POST("/v1/review/reply", _Review_ReplyReview0_HTTP_Handler(srv))
 	r.POST("/v1/review/appeal", _Review_AppealReview0_HTTP_Handler(srv))
 	r.POST("/v1/review/appeal/audit", _Review_AuditAppeal0_HTTP_Handler(srv))
-	r.GET("/v1/reviews/store/{storeID}", _Review_ListReviewsByUserID0_HTTP_Handler(srv))
+	r.GET("/v1/reviews/store/{storeID}", _Review_ListReviewsByStoreID0_HTTP_Handler(srv))
 	r.GET("/v1/{userID}/reviews", _Review_ListReviewByUserID0_HTTP_Handler(srv))
 }
 
@@ -190,7 +190,7 @@ func _Review_AuditAppeal0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Conte
 	}
 }
 
-func _Review_ListReviewsByUserID0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Context) error {
+func _Review_ListReviewsByStoreID0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListReviewsByStoreIDRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -199,9 +199,9 @@ func _Review_ListReviewsByUserID0_HTTP_Handler(srv ReviewHTTPServer) func(ctx ht
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationReviewListReviewsByUserID)
+		http.SetOperation(ctx, OperationReviewListReviewsByStoreID)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListReviewsByUserID(ctx, req.(*ListReviewsByStoreIDRequest))
+			return srv.ListReviewsByStoreID(ctx, req.(*ListReviewsByStoreIDRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -246,8 +246,8 @@ type ReviewHTTPClient interface {
 	// GetReviewC端获取评价详情
 	GetReview(ctx context.Context, req *GetReviewRequest, opts ...http.CallOption) (rsp *GetReviewReply, err error)
 	ListReviewByUserID(ctx context.Context, req *ListReviewByUserIDRequest, opts ...http.CallOption) (rsp *ListReviewByUserIDReply, err error)
-	// ListReviewsByUserIDC端查看userID的所有评价
-	ListReviewsByUserID(ctx context.Context, req *ListReviewsByStoreIDRequest, opts ...http.CallOption) (rsp *ListReviewsByStoreIDReply, err error)
+	// ListReviewsByStoreIDC端查看userID的所有评价
+	ListReviewsByStoreID(ctx context.Context, req *ListReviewsByStoreIDRequest, opts ...http.CallOption) (rsp *ListReviewsByStoreIDReply, err error)
 	// ReplyReviewB端回复评价
 	ReplyReview(ctx context.Context, req *ReplyReviewRequest, opts ...http.CallOption) (rsp *ReplyReviewReply, err error)
 }
@@ -343,12 +343,12 @@ func (c *ReviewHTTPClientImpl) ListReviewByUserID(ctx context.Context, in *ListR
 	return &out, nil
 }
 
-// ListReviewsByUserIDC端查看userID的所有评价
-func (c *ReviewHTTPClientImpl) ListReviewsByUserID(ctx context.Context, in *ListReviewsByStoreIDRequest, opts ...http.CallOption) (*ListReviewsByStoreIDReply, error) {
+// ListReviewsByStoreIDC端查看userID的所有评价
+func (c *ReviewHTTPClientImpl) ListReviewsByStoreID(ctx context.Context, in *ListReviewsByStoreIDRequest, opts ...http.CallOption) (*ListReviewsByStoreIDReply, error) {
 	var out ListReviewsByStoreIDReply
 	pattern := "/v1/reviews/store/{storeID}"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationReviewListReviewsByUserID))
+	opts = append(opts, http.Operation(OperationReviewListReviewsByStoreID))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

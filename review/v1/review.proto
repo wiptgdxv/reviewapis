@@ -49,7 +49,7 @@ service Review {
 	   };
 	}
 	//C端查看userID的所有评价
-	rpc ListReviewsByUserID (ListReviewsByStoreIDRequest) returns (ListReviewsByStoreIDReply){
+	rpc ListReviewsByStoreID (ListReviewsByStoreIDRequest) returns (ListReviewsByStoreIDReply){
 	 option (google.api.http) = {
 	  get: "/v1/reviews/store/{storeID}"
 	   };

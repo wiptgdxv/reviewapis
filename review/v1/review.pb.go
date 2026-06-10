@@ -1209,7 +1209,7 @@ const file_api_review_v1_review_proto_rawDesc = "" +
 	"\x04page\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x04page\x12#\n" +
 	"\bpageSize\x18\x03 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\bpageSize\"J\n" +
 	"\x19ListReviewsByStoreIDReply\x12-\n" +
-	"\x04list\x18\x01 \x03(\v2\x19.api.review.v1.ReviewInfoR\x04list2\xc6\a\n" +
+	"\x04list\x18\x01 \x03(\v2\x19.api.review.v1.ReviewInfoR\x04list2\xc7\a\n" +
 	"\x06Review\x12k\n" +
 	"\fCreateReview\x12\".api.review.v1.CreateReviewRequest\x1a .api.review.v1.CreateReviewReply\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
 	"/v1/review\x12j\n" +
@@ -1217,8 +1217,8 @@ const file_api_review_v1_review_proto_rawDesc = "" +
 	"\vAuditReview\x12!.api.review.v1.AuditReviewRequest\x1a\x1f.api.review.v1.AuditReviewReply\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/v1/review/audit\x12n\n" +
 	"\vReplyReview\x12!.api.review.v1.ReplyReviewRequest\x1a\x1f.api.review.v1.ReplyReviewReply\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/v1/review/reply\x12r\n" +
 	"\fAppealReview\x12\".api.review.v1.AppealReviewRequest\x1a .api.review.v1.AppealReviewReply\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/review/appeal\x12u\n" +
-	"\vAuditAppeal\x12!.api.review.v1.AuditAppealRequest\x1a\x1f.api.review.v1.AuditAppealReply\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/v1/review/appeal/audit\x12\x90\x01\n" +
-	"\x13ListReviewsByUserID\x12*.api.review.v1.ListReviewsByStoreIDRequest\x1a(.api.review.v1.ListReviewsByStoreIDReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/reviews/store/{storeID}\x12\x84\x01\n" +
+	"\vAuditAppeal\x12!.api.review.v1.AuditAppealRequest\x1a\x1f.api.review.v1.AuditAppealReply\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/v1/review/appeal/audit\x12\x91\x01\n" +
+	"\x14ListReviewsByStoreID\x12*.api.review.v1.ListReviewsByStoreIDRequest\x1a(.api.review.v1.ListReviewsByStoreIDReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/reviews/store/{storeID}\x12\x84\x01\n" +
 	"\x12ListReviewByUserID\x12(.api.review.v1.ListReviewByUserIDRequest\x1a&.api.review.v1.ListReviewByUserIDReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/{userID}/reviewsB2\n" +
 	"\rapi.review.v1P\x01Z\x1freview-service/api/review/v1;v1b\x06proto3"
 
@@ -1266,7 +1266,7 @@ var file_api_review_v1_review_proto_depIdxs = []int32{
 	10, // 7: api.review.v1.Review.ReplyReview:input_type -> api.review.v1.ReplyReviewRequest
 	12, // 8: api.review.v1.Review.AppealReview:input_type -> api.review.v1.AppealReviewRequest
 	14, // 9: api.review.v1.Review.AuditAppeal:input_type -> api.review.v1.AuditAppealRequest
-	16, // 10: api.review.v1.Review.ListReviewsByUserID:input_type -> api.review.v1.ListReviewsByStoreIDRequest
+	16, // 10: api.review.v1.Review.ListReviewsByStoreID:input_type -> api.review.v1.ListReviewsByStoreIDRequest
 	0,  // 11: api.review.v1.Review.ListReviewByUserID:input_type -> api.review.v1.ListReviewByUserIDRequest
 	4,  // 12: api.review.v1.Review.CreateReview:output_type -> api.review.v1.CreateReviewReply
 	6,  // 13: api.review.v1.Review.GetReview:output_type -> api.review.v1.GetReviewReply
@@ -1274,7 +1274,7 @@ var file_api_review_v1_review_proto_depIdxs = []int32{
 	11, // 15: api.review.v1.Review.ReplyReview:output_type -> api.review.v1.ReplyReviewReply
 	13, // 16: api.review.v1.Review.AppealReview:output_type -> api.review.v1.AppealReviewReply
 	15, // 17: api.review.v1.Review.AuditAppeal:output_type -> api.review.v1.AuditAppealReply
-	17, // 18: api.review.v1.Review.ListReviewsByUserID:output_type -> api.review.v1.ListReviewsByStoreIDReply
+	17, // 18: api.review.v1.Review.ListReviewsByStoreID:output_type -> api.review.v1.ListReviewsByStoreIDReply
 	1,  // 19: api.review.v1.Review.ListReviewByUserID:output_type -> api.review.v1.ListReviewByUserIDReply
 	12, // [12:20] is the sub-list for method output_type
 	4,  // [4:12] is the sub-list for method input_type
